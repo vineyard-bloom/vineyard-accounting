@@ -1,7 +1,7 @@
 {
   "name": "vineyard-accounting",
   "version": "1.0.0-beta.0",
-  "description": "Library for simple accounting and integrating accounts with blockchains",
+  "description": "Simple accounting library",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "scripts": {

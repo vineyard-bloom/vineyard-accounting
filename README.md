@@ -1,3 +1,3 @@
 # Vineyard Accounting
 
-Library for simple accounting and integrating accounts with blockchains
+Simple accounting library
