@@ -6,10 +6,15 @@ export type Id = string
 
 export type Identity<T> = Id
 
+export interface HasId {
+  id: string
+}
+
 export interface NewGenericLedger<Account, LedgerType> {
   account: Identity<Account>,
   mod: BigNumber
-  name: string,
+  description: string,
+  type: LedgerType
 }
 
 export interface GenericLedger<Account, LedgerType> extends NewGenericLedger<Account, LedgerType> {
@@ -17,17 +22,18 @@ export interface GenericLedger<Account, LedgerType> extends NewGenericLedger<Acc
   balance: BigNumber
 }
 
-export interface NewDeposit {
+export interface GenericNewDeposit {
   account: string
   transaction: Transaction
 }
 
-export interface Deposit extends NewDeposit {
+export interface GenericDeposit extends GenericNewDeposit {
   id: Id
 }
 
-export interface AccountingModel<Account, LedgerType> {
+export interface AccountingModel<Account, Deposit extends GenericDeposit, LedgerType> {
   Account: Collection<Account>
+  Deposit: Collection<Deposit>
   Ledger: Collection<GenericLedger<Account, LedgerType>>
   ground: Modeler
 }

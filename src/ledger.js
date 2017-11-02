@@ -61,4 +61,5 @@ class LedgerManager {
         });
     }
 }
+exports.LedgerManager = LedgerManager;
 //# sourceMappingURL=ledger.js.map

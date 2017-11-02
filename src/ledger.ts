@@ -1,7 +1,7 @@
 import {AccountConfig, AccountingModel, GenericLedger, NewGenericLedger} from "./types";
 import {BigNumber} from "bignumber.js"
 
-class LedgerManager<Account, LedgerType> {
+export class LedgerManager<Account, LedgerType> {
   model: AccountingModel<Account, LedgerType>
   accountConfig: AccountConfig
 
