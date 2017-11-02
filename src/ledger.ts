@@ -1,4 +1,4 @@
-import {AccountConfig, AccountingModel, Ledger, NewLedger} from "./types";
+import {AccountConfig, AccountingModel, GenericLedger, NewGenericLedger} from "./types";
 import {BigNumber} from "bignumber.js"
 
 class LedgerManager<Account, LedgerType> {
@@ -51,7 +51,7 @@ class LedgerManager<Account, LedgerType> {
     }
   }
 
-  async createLedger(newLedger: NewLedger<Account, LedgerType>): Promise<Ledger<Account, LedgerType>> {
+  async createLedger(newLedger: NewGenericLedger<Account, LedgerType>): Promise<GenericLedger<Account, LedgerType>> {
     await this.modifyAccountBalance(newLedger.account, newLedger.mod);
     return await this.model.Ledger.create(newLedger)
   }
