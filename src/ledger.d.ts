@@ -1,9 +1,9 @@
-import { AccountConfig, AccountingModel, GenericLedger, NewGenericLedger } from "./types";
+import { AccountConfig, AccountingModel, GenericDeposit, GenericLedger, NewGenericLedger } from "./types";
 import { BigNumber } from "bignumber.js";
-export declare class LedgerManager<Account, LedgerType> {
-    model: AccountingModel<Account, LedgerType>;
+export declare class LedgerManager<Account, Deposit extends GenericDeposit, LedgerType> {
+    model: AccountingModel<Account, Deposit, LedgerType>;
     accountConfig: AccountConfig;
-    constructor(model: AccountingModel<Account, LedgerType>, accountConfig: AccountConfig);
+    constructor(model: AccountingModel<Account, Deposit, LedgerType>, accountConfig: AccountConfig);
     private addAmountToAccount(mod, account);
     private removeAmountFromAccount(mod, account);
     modifyAccountBalance(account: string, mod: BigNumber): Promise<boolean>;

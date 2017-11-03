@@ -1,11 +1,11 @@
-import {AccountConfig, AccountingModel, GenericLedger, NewGenericLedger} from "./types";
+import {AccountConfig, AccountingModel, GenericDeposit, GenericLedger, NewGenericLedger} from "./types";
 import {BigNumber} from "bignumber.js"
 
-export class LedgerManager<Account, LedgerType> {
-  model: AccountingModel<Account, LedgerType>
+export class LedgerManager<Account, Deposit extends GenericDeposit, LedgerType> {
+  model: AccountingModel<Account, Deposit, LedgerType>
   accountConfig: AccountConfig
 
-  constructor(model: AccountingModel<Account, LedgerType>, accountConfig: AccountConfig) {
+  constructor(model: AccountingModel<Account, Deposit, LedgerType>, accountConfig: AccountConfig) {
     this.model = model;
     this.accountConfig = accountConfig;
   }

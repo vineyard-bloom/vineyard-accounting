@@ -14,6 +14,11 @@ class AccountManager {
             return this.model.Deposit.create(newDeposit);
         });
     }
+    createDepositFromTransaction(transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.model.Deposit.create({ id: transaction.id });
+        });
+    }
     createLedger(newLedger) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.ledgerManager.createLedger(newLedger);
