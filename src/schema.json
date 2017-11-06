@@ -7,7 +7,7 @@
       "currency": {
         "type": "string"
       },
-      "Account": {
+      "account": {
         "type": "Account",
         "nullable": true
       }
