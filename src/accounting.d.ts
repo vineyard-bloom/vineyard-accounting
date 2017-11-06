@@ -9,4 +9,5 @@ export declare class AccountManager<Account, Deposit extends GenericDeposit, Led
     createDepositFromTransaction<NewDeposit>(transaction: Transaction): Promise<Deposit>;
     createLedger(newLedger: NewGenericLedger<Account, LedgerType>): Promise<GenericLedger<Account, LedgerType>>;
     createAddress(address: NewAddress): Promise<Address>;
+    getUnusedAddress(currency: string): Promise<Address | undefined>;
 }

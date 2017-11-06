@@ -26,4 +26,8 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     return this.model.Address.create(address)
   }
 
+  async getUnusedAddress(currency: string): Promise<Address | undefined> {
+    const sql = `SELECT * FROM addresses WHERE account IS NULL AND currency = :currency`
+    return this.model.ground.querySingle(sql, {currency: currency})
+  }
 }

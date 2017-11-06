@@ -29,6 +29,12 @@ class AccountManager {
             return this.model.Address.create(address);
         });
     }
+    getUnusedAddress(currency) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sql = `SELECT * FROM addresses WHERE account IS NULL AND currency = :currency`;
+            return this.model.ground.querySingle(sql, { currency: currency });
+        });
+    }
 }
 exports.AccountManager = AccountManager;
 //# sourceMappingURL=accounting.js.map
