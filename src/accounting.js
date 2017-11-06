@@ -24,6 +24,11 @@ class AccountManager {
             return this.ledgerManager.createLedger(newLedger);
         });
     }
+    createAddress(address) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.model.Address.create(address);
+        });
+    }
 }
 exports.AccountManager = AccountManager;
 //# sourceMappingURL=accounting.js.map

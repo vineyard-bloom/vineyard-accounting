@@ -1,0 +1,16 @@
+{
+  "Address": {
+    "properties": {
+      "address": {
+        "type": "string"
+      },
+      "currency": {
+        "type": "string"
+      },
+      "Account": {
+        "type": "Account",
+        "nullable": true
+      }
+    }
+  }
+}

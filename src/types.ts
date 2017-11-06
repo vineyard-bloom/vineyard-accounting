@@ -1,6 +1,6 @@
 import {BigNumber} from 'bignumber.js'
 import {Collection, Modeler} from 'vineyard-ground'
-import {Currency, Transaction} from "vineyard-blockchain"
+import {Address, Currency, NewAddress, Transaction} from "vineyard-blockchain"
 
 export type Id = string
 
@@ -9,6 +9,14 @@ export type Identity<T> = Id
 export interface HasId {
   id: string
 }
+
+export interface AddressWithAccount {
+  account: string | undefined
+}
+
+export type NewAccountAddress = NewAddress & AddressWithAccount
+
+export type AccountAddress = Address & AddressWithAccount
 
 export interface NewGenericLedger<Account, LedgerType> {
   account: Identity<Account>,
@@ -33,6 +41,7 @@ export interface GenericDeposit extends GenericNewDeposit {
 
 export interface AccountingModel<Account, Deposit extends GenericDeposit, LedgerType> {
   Account: Collection<Account>
+  Address: Collection<Address>
   Deposit: Collection<Deposit>
   Ledger: Collection<GenericLedger<Account, LedgerType>>
   ground: Modeler
