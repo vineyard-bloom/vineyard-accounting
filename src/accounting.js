@@ -29,6 +29,11 @@ class AccountManager {
             return this.model.Address.create(address);
         });
     }
+    getAccountByTransaction(transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.model.Account.first({ depositAddress: transaction.to });
+        });
+    }
     getUnusedAddress(currency) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `SELECT * FROM addresses WHERE account IS NULL AND currency = :currency`;

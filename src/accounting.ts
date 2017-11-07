@@ -3,7 +3,7 @@ import {
   NewGenericLedger
 } from "./types";
 import {LedgerManager} from "./ledger"
-import {Address, NewAddress, Transaction} from "vineyard-blockchain"
+import {Address, NewAddress, ExternalTransaction, Transaction} from "vineyard-blockchain"
 
 export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType> {
   model: AccountingModel<Account, Deposit, LedgerType>
@@ -24,6 +24,10 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
 
   async createAddress(address: NewAddress): Promise<Address> {
     return this.model.Address.create(address)
+  }
+
+  async getAccountByTransaction(transaction: ExternalTransaction): Promise<Account | undefined> {
+    return await this.model.Account.first({depositAddress: transaction.to}) 
   }
 
   async getUnusedAddress(currency: string): Promise<Address | undefined> {
