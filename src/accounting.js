@@ -8,7 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const ledger_1 = require("./ledger");
 class AccountManager {
+    constructor(model, accountConfig) {
+        this.model = model;
+        this.accountConfig = accountConfig;
+        this.ledgerManager = new ledger_1.LedgerManager(model, this.accountConfig);
+    }
     createDeposit(newDeposit) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.model.Deposit.create(newDeposit);

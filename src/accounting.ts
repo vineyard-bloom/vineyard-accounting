@@ -10,6 +10,12 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
   accountConfig: AccountConfig
   ledgerManager: LedgerManager<Account, Deposit, LedgerType>
 
+  constructor(model: AccountingModel<Account, Deposit, LedgerType>, accountConfig: AccountConfig) {
+    this.model = model
+    this.accountConfig = accountConfig
+    this.ledgerManager = new LedgerManager<Account, Deposit, LedgerType>(model, this.accountConfig)
+  }
+
   async createDeposit<NewDeposit>(newDeposit: NewDeposit): Promise<Deposit> {
     return this.model.Deposit.create(newDeposit)
   }
@@ -27,7 +33,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
   }
 
   async getAccountByTransaction(transaction: BaseTransaction): Promise<Account | undefined> {
-    return await this.model.Account.first({depositAddress: transaction.to}) 
+    return await this.model.Account.first({depositAddress: transaction.to})
   }
 
   async getUnusedAddress(currency: string): Promise<Address | undefined> {
