@@ -35,9 +35,14 @@ class AccountManager {
             return this.model.Address.create(address);
         });
     }
-    getAccountByTransaction(transaction) {
+    getAccountByTransaction(transaction, currency) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.model.Account.first({ depositAddress: transaction.to });
+            if (currency = "bitcoin") {
+                return yield this.model.Account.first({ btcDepositAddress: transaction.to });
+            }
+            if (currency = "ethereum") {
+                return yield this.model.Account.first({ ethDepositAddress: transaction.to });
+            }
         });
     }
     getUnusedAddress(currency) {
