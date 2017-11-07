@@ -26,7 +26,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     return this.model.Address.create(address)
   }
 
-  async getAccountByTransaction(transaction: ExternalTransaction): Promise<Account | undefined> {
+  async getAccountByTransaction(transaction: Transaction): Promise<Account | undefined> {
     return await this.model.Account.first({depositAddress: transaction.to}) 
   }
 
