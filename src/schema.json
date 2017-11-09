@@ -12,5 +12,24 @@
         "nullable": true
       }
     }
+  },
+  "Ledger": {
+    "properties": {
+      "balance": {
+        "type": "colossal"
+      }, 
+      "account": {
+        "type": "uuid"
+      } ,
+      "mod": {
+        "type": "colossal"
+      },
+      "description": {
+        "type": "string"
+      },
+      "type": {
+        "type": "int"
+      } 
+    }
   }
 }
