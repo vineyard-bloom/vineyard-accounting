@@ -11,5 +11,5 @@ export declare class AccountManager<Account, Deposit extends GenericDeposit, Led
     createLedger(newLedger: NewGenericLedger<Account, LedgerType>): Promise<GenericLedger<Account, LedgerType>>;
     createAddress(address: NewAddress): Promise<Address>;
     getAccountByTransaction(transaction: BaseTransaction, currency: string): Promise<Account | undefined>;
-    getUnusedAddress(currency: string): Promise<Address | undefined>;
+    assignUnusedAddress(account: string, currency: string): Promise<Address | undefined>;
 }

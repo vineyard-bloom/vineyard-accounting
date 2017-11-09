@@ -34,13 +34,13 @@ class LedgerManager {
     WHERE id = :account
     AND balance >= :amount
   `;
-            const res = yield this.model.ground.getLegacyDatabaseInterface().querySingle(sql, {
+            const result = yield this.model.ground.getLegacyDatabaseInterface().query(sql, {
                 replacements: {
                     amount: -mod,
                     account: account
                 }
             });
-            return res[1].rowCount === 1;
+            return result[1].rowCount == 1;
         });
     }
     modifyAccountBalance(account, mod) {

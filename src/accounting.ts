@@ -33,16 +33,28 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
   }
 
   async getAccountByTransaction(transaction: BaseTransaction, currency: string): Promise<Account | undefined> {
-    if(currency = "bitcoin") {
+    if (currency = "bitcoin") {
       return await this.model.Account.first({btcDepositAddress: transaction.to})
     }
-    if(currency = "ethereum") {
+    if (currency = "ethereum") {
       return await this.model.Account.first({ethDepositAddress: transaction.to})
     }
   }
 
-  async getUnusedAddress(currency: string): Promise<Address | undefined> {
-    const sql = `SELECT * FROM addresses WHERE account IS NULL AND currency = :currency`
-    return this.model.ground.querySingle(sql, {currency: currency})
+  async assignUnusedAddress(account: string, currency: string): Promise<Address | undefined> {
+    const sql = `
+    UPDATE addresses
+    SET account = :account
+    WHERE id IN (
+      SELECT id FROM addresses
+      WHERE account IS NULL
+      AND currency = :currency
+      LIMIT 1
+    )
+  `
+    return await this.model.ground.querySingle(sql, {
+      account: account,
+      currency: currency
+    })
   }
 }

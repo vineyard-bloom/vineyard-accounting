@@ -45,10 +45,22 @@ class AccountManager {
             }
         });
     }
-    getUnusedAddress(currency) {
+    assignUnusedAddress(account, currency) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = `SELECT * FROM addresses WHERE account IS NULL AND currency = :currency`;
-            return this.model.ground.querySingle(sql, { currency: currency });
+            const sql = `
+    UPDATE addresses
+    SET account = :account
+    WHERE id IN (
+      SELECT id FROM addresses
+      WHERE account IS NULL
+      AND currency = :currency
+      LIMIT 1
+    )
+  `;
+            return yield this.model.ground.querySingle(sql, {
+                account: account,
+                currency: currency
+            });
         });
     }
 }

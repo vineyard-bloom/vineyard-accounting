@@ -31,14 +31,14 @@ export class LedgerManager<Account, Deposit extends GenericDeposit, LedgerType> 
     AND balance >= :amount
   `
 
-    const res = await this.model.ground.getLegacyDatabaseInterface().querySingle(sql, {
+    const result = await this.model.ground.getLegacyDatabaseInterface().query(sql, {
       replacements: {
         amount: -mod,
         account: account
       }
     })
 
-    return res[1].rowCount === 1
+    return result[1].rowCount == 1
   }
 
   async modifyAccountBalance(account: string, mod: BigNumber): Promise<boolean> {
