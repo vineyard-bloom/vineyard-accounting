@@ -28,9 +28,14 @@ export interface GenericNewDeposit {
 export interface GenericDeposit extends GenericNewDeposit {
     id: Id;
 }
+export interface Account_Address {
+    account: string;
+    address: Identity<Address>;
+}
 export interface AccountingModel<Account, Deposit extends GenericDeposit, LedgerType> {
     Account: Collection<Account>;
     Address: Collection<Address>;
+    Account_Address: Collection<Account_Address>;
     Deposit: Collection<Deposit>;
     Ledger: Collection<GenericLedger<Account, LedgerType>>;
     ground: Modeler;

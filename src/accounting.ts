@@ -1,11 +1,11 @@
 import {
-  AccountConfig, AccountingModel, GenericDeposit, GenericLedger, HasId,
+  AccountConfig, AccountingModel, GenericDeposit, GenericLedger, HasId, Identity,
   NewGenericLedger
 } from "./types";
 import {LedgerManager} from "./ledger"
 import {
   Address, NewAddress, ExternalSingleTransaction as ExternalTransaction, BaseTransaction,
-  SingleTransaction as Transaction, NewSingleTransaction
+  SingleTransaction as Transaction, NewSingleTransaction, Currency
 } from "vineyard-blockchain"
 
 export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType> {
@@ -35,7 +35,21 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     return this.model.Address.create(address)
   }
 
-  async getAccountByAddressString(externalAddress: string, currency: string): Promise<Account | undefined> {
+  async createAccountAddress(account: Identity<Account>, externalAddress: string, currency: string): Promise<Address> {
+    const address = await this.model.Address.create({
+      address: externalAddress,
+      currency: currency,
+    })
+
+    await this.model.Account_Address.create({
+      account: account,
+      address: address.id,
+    })
+
+    return address
+  }
+
+  async getAccountByAddressString(externalAddress: string, currency: Identity<Currency>): Promise<Account | undefined> {
     const sql = `
     SELECT accounts.* FROM accounts
     JOIN accounts_addresses 
@@ -50,7 +64,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     })
   }
 
-  async getAccountByAddressId(address: string): Promise<Account | undefined> {
+  async getAccountByAddressId(address: Identity<Address>): Promise<Account | undefined> {
     const sql = `
     SELECT accounts.* FROM accounts
     JOIN accounts_addresses 
@@ -62,16 +76,15 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     })
   }
 
-  async assignUnusedAddress(account: string, currency: string): Promise<Address | undefined> {
+  async assignUnusedAddress(account: string, currency: Identity<Currency>): Promise<Address | undefined> {
     const sql = `
-    UPDATE addresses
-    SET account = :account
-    WHERE id IN (
-      SELECT id FROM addresses
-      WHERE account IS NULL
-      AND currency = :currency
-      LIMIT 1
-    )
+    INSERT INTO accounts_addresses (account, address
+    FROM (SELECT 
+    FROM addresses
+    LEFT JOIN accounts_addresses
+    ON accounts_addresses.address = addresses.id
+    WHERE accounts_addresses.address IS NULL
+    LIMIT 1
   `
     return await this.model.ground.querySingle(sql, {
       account: account,

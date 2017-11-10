@@ -1,5 +1,5 @@
 {
-  "Accounts_Addresses": {
+  "Account_Address": {
     "table": {
       "name": "accounts_addresses"
     },

@@ -35,6 +35,19 @@ class AccountManager {
             return this.model.Address.create(address);
         });
     }
+    createAccountAddress(account, externalAddress, currency) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const address = yield this.model.Address.create({
+                address: externalAddress,
+                currency: currency,
+            });
+            yield this.model.Account_Address.create({
+                account: account,
+                address: address.id,
+            });
+            return address;
+        });
+    }
     getAccountByAddressString(externalAddress, currency) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `
@@ -67,14 +80,13 @@ class AccountManager {
     assignUnusedAddress(account, currency) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `
-    UPDATE addresses
-    SET account = :account
-    WHERE id IN (
-      SELECT id FROM addresses
-      WHERE account IS NULL
-      AND currency = :currency
-      LIMIT 1
-    )
+    INSERT INTO accounts_addresses (account, address
+    FROM (SELECT 
+    FROM addresses
+    LEFT JOIN accounts_addresses
+    ON accounts_addresses.address = addresses.id
+    WHERE accounts_addresses.address IS NULL
+    LIMIT 1
   `;
             return yield this.model.ground.querySingle(sql, {
                 account: account,
