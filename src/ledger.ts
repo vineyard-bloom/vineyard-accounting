@@ -54,8 +54,11 @@ export class LedgerManager<Account, Deposit extends GenericDeposit, LedgerType> 
     }
   }
 
-  async createLedger(newLedger: NewGenericLedger<Account, LedgerType>): Promise<GenericLedger<Account, LedgerType>> {
-    const balance = await this.modifyAccountBalance(newLedger.account, newLedger.mod);
+  async createLedger(newLedger: NewGenericLedger<Account, LedgerType>): Promise<GenericLedger<Account, LedgerType> | undefined> {
+    const balance = await this.modifyAccountBalance(newLedger.account, newLedger.mod)
+    if (balance === undefined)
+      return
+
     const seed = Object.assign({
       balance: balance
     }, newLedger)

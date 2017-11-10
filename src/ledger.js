@@ -59,6 +59,8 @@ class LedgerManager {
     createLedger(newLedger) {
         return __awaiter(this, void 0, void 0, function* () {
             const balance = yield this.modifyAccountBalance(newLedger.account, newLedger.mod);
+            if (balance === undefined)
+                return;
             const seed = Object.assign({
                 balance: balance
             }, newLedger);

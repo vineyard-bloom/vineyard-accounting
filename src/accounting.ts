@@ -27,7 +27,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     return this.model.Deposit.create({id: transaction.id})
   }
 
-  async createLedger(newLedger: NewGenericLedger<Account, LedgerType>): Promise<GenericLedger<Account, LedgerType>> {
+  async createLedger(newLedger: NewGenericLedger<Account, LedgerType>): Promise<GenericLedger<Account, LedgerType> | undefined> {
     return this.ledgerManager.createLedger(newLedger)
   }
 

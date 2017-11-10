@@ -45,7 +45,8 @@ interface Account {
 
 enum LedgerType {
   deposit,
-  bonus
+  bonus,
+  taxes,
 }
 
 describe('accounting-test', function () {
@@ -89,7 +90,7 @@ describe('accounting-test', function () {
 
     const account = await generalModel.Account.create({})
 
-    const ledger = await accountManager.createLedger({
+    const ledger: any = await accountManager.createLedger({
       account: account.id,
       mod: new BigNumber(15),
       description: "You got a bonus out of nowhere!",
@@ -101,5 +102,14 @@ describe('accounting-test', function () {
     assert(mod.isBigNumber)
     assert(balance.isBigNumber)
     assert.equal(ledger.balance.toNumber(), 15)
+
+    const tax = await accountManager.createLedger({
+      account: account.id,
+      mod: new BigNumber(-19),
+      description: "The government is taking all of your money!",
+      type: LedgerType.taxes
+    })
+    assert.isUndefined(tax)
+
   })
 })
