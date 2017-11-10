@@ -132,10 +132,12 @@ class AccountManager {
     )
     RETURNING *
   `;
-            return yield this.model.ground.querySingle(sql, {
+            const cross = yield this.model.ground.querySingle(sql, {
                 account: account,
                 currency: currency
             });
+            if (cross)
+                return yield this.model.Address.get(cross.address);
         });
     }
 }

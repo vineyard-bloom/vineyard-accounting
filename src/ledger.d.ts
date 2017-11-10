@@ -6,6 +6,6 @@ export declare class LedgerManager<Account, Deposit extends GenericDeposit, Ledg
     constructor(model: AccountingModel<Account, Deposit, LedgerType>, accountConfig: AccountConfig);
     private addAmountToAccount(mod, account);
     private removeAmountFromAccount(mod, account);
-    modifyAccountBalance(account: string, mod: BigNumber): Promise<boolean>;
+    modifyAccountBalance(account: string, mod: BigNumber): Promise<number | undefined>;
     createLedger(newLedger: NewGenericLedger<Account, LedgerType>): Promise<GenericLedger<Account, LedgerType>>;
 }

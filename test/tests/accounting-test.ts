@@ -44,7 +44,8 @@ interface Account {
 }
 
 enum LedgerType {
-  deposit
+  deposit,
+  bonus
 }
 
 describe('accounting-test', function () {
@@ -72,7 +73,7 @@ describe('accounting-test', function () {
     {
       const result: any = await accountManager.assignUnusedAddress(account.id, CurrencyType.btc)
       assert(result)
-      assert.equal(result.address, address.id)
+      assert.equal(result.id, address.id)
     }
 
     {
@@ -80,5 +81,25 @@ describe('accounting-test', function () {
       assert.isUndefined(result)
     }
 
+  })
+
+  it('createLedger', async function () {
+    const generalModel = await createGeneralModel(databaseClient) as AccountingModel<Account, GenericDeposit, LedgerType>
+    const accountManager = new AccountManager(generalModel)
+
+    const account = await generalModel.Account.create({})
+
+    const ledger = await accountManager.createLedger({
+      account: account.id,
+      mod: new BigNumber(15),
+      description: "You got a bonus out of nowhere!",
+      type: LedgerType.bonus
+    })
+
+    const mod: any = ledger.mod
+    const balance: any = ledger.balance
+    assert(mod.isBigNumber)
+    assert(balance.isBigNumber)
+    assert.equal(ledger.balance.toNumber(), 15)
   })
 })

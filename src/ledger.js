@@ -19,11 +19,13 @@ class LedgerManager {
     UPDATE accounts
     SET balance = balance + :amount
     WHERE id = :account
+    RETURNING *
   `;
-            yield this.model.ground.querySingle(sql, {
+            const result = yield this.model.ground.querySingle(sql, {
                 amount: mod,
                 account: account
             });
+            return result.balance;
         });
     }
     removeAmountFromAccount(mod, account) {
@@ -33,21 +35,21 @@ class LedgerManager {
     SET balance = balance - :amount
     WHERE id = :account
     AND balance >= :amount
+    RETURNING *
   `;
-            const result = yield this.model.ground.getLegacyDatabaseInterface().query(sql, {
-                replacements: {
-                    amount: -mod,
-                    account: account
-                }
+            const result = yield this.model.ground.querySingle(sql, {
+                amount: -mod,
+                account: account
             });
-            return result[1].rowCount == 1;
+            return result
+                ? result.balance
+                : undefined;
         });
     }
     modifyAccountBalance(account, mod) {
         return __awaiter(this, void 0, void 0, function* () {
             if (mod.greaterThanOrEqualTo(0)) {
-                yield this.addAmountToAccount(mod, account);
-                return true;
+                return yield this.addAmountToAccount(mod, account);
             }
             else {
                 return yield this.removeAmountFromAccount(mod, account);
@@ -56,8 +58,11 @@ class LedgerManager {
     }
     createLedger(newLedger) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.modifyAccountBalance(newLedger.account, newLedger.mod);
-            return yield this.model.Ledger.create(newLedger);
+            const balance = yield this.modifyAccountBalance(newLedger.account, newLedger.mod);
+            const seed = Object.assign({
+                balance: balance
+            }, newLedger);
+            return yield this.model.Ledger.create(seed);
         });
     }
 }

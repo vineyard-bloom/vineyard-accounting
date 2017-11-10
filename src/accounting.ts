@@ -129,9 +129,12 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     )
     RETURNING *
   `
-    return await this.model.ground.querySingle(sql, {
+    const cross = await this.model.ground.querySingle(sql, {
       account: account,
       currency: currency
     })
+
+    if (cross)
+      return await this.model.Address.get(cross.address)
   }
 }

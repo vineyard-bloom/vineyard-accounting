@@ -10,41 +10,44 @@ export class LedgerManager<Account, Deposit extends GenericDeposit, LedgerType> 
     this.accountConfig = accountConfig;
   }
 
-  private async addAmountToAccount(mod: BigNumber, account: string): Promise<void> {
+  private async addAmountToAccount(mod: BigNumber, account: string): Promise<number> {
     const sql = `
     UPDATE accounts
     SET balance = balance + :amount
     WHERE id = :account
+    RETURNING *
   `
 
-    await this.model.ground.querySingle(sql, {
+    const result = await this.model.ground.querySingle(sql, {
       amount: mod,
       account: account
     })
+
+    return result.balance
   }
 
-  private async removeAmountFromAccount(mod: BigNumber, account: string): Promise<boolean> {
+  private async removeAmountFromAccount(mod: BigNumber, account: string): Promise<number | undefined> {
     const sql = `
     UPDATE accounts
     SET balance = balance - :amount
     WHERE id = :account
     AND balance >= :amount
+    RETURNING *
   `
 
-    const result = await this.model.ground.getLegacyDatabaseInterface().query(sql, {
-      replacements: {
-        amount: -mod,
-        account: account
-      }
+    const result = await this.model.ground.querySingle(sql, {
+      amount: -mod,
+      account: account
     })
 
-    return result[1].rowCount == 1
+    return result
+      ? result.balance
+      : undefined
   }
 
-  async modifyAccountBalance(account: string, mod: BigNumber): Promise<boolean> {
+  async modifyAccountBalance(account: string, mod: BigNumber): Promise<number | undefined> {
     if (mod.greaterThanOrEqualTo(0)) {
-      await this.addAmountToAccount(mod, account)
-      return true
+      return await this.addAmountToAccount(mod, account)
     }
     else {
       return await this.removeAmountFromAccount(mod, account)
@@ -52,7 +55,10 @@ export class LedgerManager<Account, Deposit extends GenericDeposit, LedgerType> 
   }
 
   async createLedger(newLedger: NewGenericLedger<Account, LedgerType>): Promise<GenericLedger<Account, LedgerType>> {
-    await this.modifyAccountBalance(newLedger.account, newLedger.mod);
-    return await this.model.Ledger.create(newLedger)
+    const balance = await this.modifyAccountBalance(newLedger.account, newLedger.mod);
+    const seed = Object.assign({
+      balance: balance
+    }, newLedger)
+    return await this.model.Ledger.create(seed)
   }
 }
