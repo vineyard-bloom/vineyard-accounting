@@ -93,7 +93,7 @@ class AccountManager {
     SELECT accounts.* FROM accounts
     JOIN accounts_addresses 
     ON accounts_addresses.account = accounts.id
-    JOIN addresses ON accounts_addresses.address = address.id
+    JOIN addresses ON accounts_addresses.address = addresses.id
     AND addresses.address = :address
     AND addresses.currency = :currency
     `;
@@ -103,17 +103,17 @@ class AccountManager {
             });
         });
     }
-    get async() { }
     getAccountByAddressId(address) {
-        const sql = `
+        return __awaiter(this, void 0, void 0, function* () {
+            const sql = `
     SELECT accounts.* FROM accounts
     JOIN accounts_addresses 
     ON accounts_addresses.account = accounts.id
     AND accounts_addresses.address = :address
     `;
-        return await;
-        this.model.ground.querySingle(sql, {
-            address: address
+            return yield this.model.ground.querySingle(sql, {
+                address: address
+            });
         });
     }
     assignUnusedAddress(account, currency) {

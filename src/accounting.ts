@@ -92,7 +92,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     SELECT accounts.* FROM accounts
     JOIN accounts_addresses 
     ON accounts_addresses.account = accounts.id
-    JOIN addresses ON accounts_addresses.address = address.id
+    JOIN addresses ON accounts_addresses.address = addresses.id
     AND addresses.address = :address
     AND addresses.currency = :currency
     `
@@ -102,17 +102,14 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     })
   }
 
-  async get async
-
-  getAccountByAddressId(address: Identity<Address>): Promise<Account | undefined> {
+  async getAccountByAddressId(address: Identity<Address>): Promise<Account | undefined> {
     const sql = `
     SELECT accounts.* FROM accounts
     JOIN accounts_addresses 
     ON accounts_addresses.account = accounts.id
     AND accounts_addresses.address = :address
     `
-    return await
-    this.model.ground.querySingle(sql, {
+    return await this.model.ground.querySingle(sql, {
       address: address
     })
   }

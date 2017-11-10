@@ -17,7 +17,6 @@ export declare class AccountManager<Account, Deposit extends GenericDeposit, Led
     }>;
     getAccountAddressByCurrency(account: Identity<Account>, currency: Identity<Currency>): Promise<Address[]>;
     getAccountByAddressString(externalAddress: string, currency: Identity<Currency>): Promise<Account | undefined>;
-    readonly async: any;
     getAccountByAddressId(address: Identity<Address>): Promise<Account | undefined>;
     assignUnusedAddress(account: string, currency: Identity<Currency>): Promise<Address | undefined>;
 }
