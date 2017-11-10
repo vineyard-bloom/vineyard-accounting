@@ -29,7 +29,7 @@
         "type": "string"
       },
       "type": {
-        "type": "int"
+        "type": "LedgerType"
       } 
     }
   }
