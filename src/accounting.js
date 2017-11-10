@@ -52,6 +52,7 @@ class AccountManager {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `
     SELECT addresses.*
+    FROM addresses
     JOIN accounts_addresses 
     ON accounts_addresses.account = :account
     AND accounts_addresses.address = addresses.id
@@ -75,6 +76,7 @@ class AccountManager {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `
     SELECT addresses.*
+    FROM addresses
     JOIN accounts_addresses 
     ON accounts_addresses.account = :account
     AND accounts_addresses.address = addresses.id

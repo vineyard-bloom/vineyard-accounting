@@ -52,6 +52,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
   async getAccountAddresses(account: Identity<Account>): Promise<Address[]> {
     const sql = `
     SELECT addresses.*
+    FROM addresses
     JOIN accounts_addresses 
     ON accounts_addresses.account = :account
     AND accounts_addresses.address = addresses.id
@@ -74,6 +75,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
   async getAccountAddressByCurrency(account: Identity<Account>, currency: Identity<Currency>): Promise<Address[]> {
     const sql = `
     SELECT addresses.*
+    FROM addresses
     JOIN accounts_addresses 
     ON accounts_addresses.account = :account
     AND accounts_addresses.address = addresses.id
