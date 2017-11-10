@@ -49,6 +49,35 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     return address
   }
 
+  async getAccountAddresses(account: Identity<Account>):Promise<Address[]> {
+    const sql = `
+    SELECT addresses.*
+    JOIN accounts_addresses 
+    ON accounts_addresses.account = :account
+    AND accounts_addresses.address = addresses.id
+    `
+
+    return await this.model.ground.querySingle(sql, {
+      account: account,
+    })
+  }
+
+  async getAccountAddressByCurrency(account: Identity<Account>, currency: Identity<Currency>):Promise<Address[]> {
+    const sql = `
+    SELECT addresses.*
+    JOIN accounts_addresses 
+    ON accounts_addresses.account = :account
+    AND accounts_addresses.address = addresses.id
+    WHERE addresses.currency = :currency
+    LIMIT 1
+    `
+
+    return await this.model.ground.querySingle(sql, {
+      account: account,
+      currency: currency
+    })
+  }
+
   async getAccountByAddressString(externalAddress: string, currency: Identity<Currency>): Promise<Account | undefined> {
     const sql = `
     SELECT accounts.* FROM accounts

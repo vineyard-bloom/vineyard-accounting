@@ -48,6 +48,35 @@ class AccountManager {
             return address;
         });
     }
+    getAccountAddresses(account) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sql = `
+    SELECT addresses.*
+    JOIN accounts_addresses 
+    ON accounts_addresses.account = :account
+    AND accounts_addresses.address = addresses.id
+    `;
+            return yield this.model.ground.querySingle(sql, {
+                account: account,
+            });
+        });
+    }
+    getAccountAddressByCurrency(account, currency) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sql = `
+    SELECT addresses.*
+    JOIN accounts_addresses 
+    ON accounts_addresses.account = :account
+    AND accounts_addresses.address = addresses.id
+    WHERE addresses.currency = :currency
+    LIMIT 1
+    `;
+            return yield this.model.ground.querySingle(sql, {
+                account: account,
+                currency: currency
+            });
+        });
+    }
     getAccountByAddressString(externalAddress, currency) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `
