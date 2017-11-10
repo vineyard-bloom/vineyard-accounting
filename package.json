@@ -1,6 +1,6 @@
 {
   "name": "vineyard-accounting",
-  "version": "1.0.0-beta.21",
+  "version": "1.0.0-beta.22",
   "description": "Simple accounting library",
   "main": "src/index.js",
   "types": "src/index.d.ts",
