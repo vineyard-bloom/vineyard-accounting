@@ -61,7 +61,7 @@ class AccountManager {
             });
         });
     }
-    getAccountAddressesMap(account) {
+    getAccountAddressMap(account) {
         return __awaiter(this, void 0, void 0, function* () {
             const addresses = yield this.getAccountAddresses(account);
             const result = {};

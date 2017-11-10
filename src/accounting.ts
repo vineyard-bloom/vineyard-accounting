@@ -62,7 +62,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     })
   }
 
-  async getAccountAddressesMap(account: Identity<Account>): Promise<{ [id: string]: Address }> {
+  async getAccountAddressMap(account: Identity<Account>): Promise<{ [id: string]: Address }> {
     const addresses = await this.getAccountAddresses(account)
     const result: { [id: string]: Address } = {}
     for (let address of addresses) {

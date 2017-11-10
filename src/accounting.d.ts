@@ -12,7 +12,7 @@ export declare class AccountManager<Account, Deposit extends GenericDeposit, Led
     createAddress(address: NewAddress): Promise<Address>;
     createAccountAddress(account: Identity<Account>, externalAddress: string, currency: string): Promise<Address>;
     getAccountAddresses(account: Identity<Account>): Promise<Address[]>;
-    getAccountAddressesMap(account: Identity<Account>): Promise<{
+    getAccountAddressMap(account: Identity<Account>): Promise<{
         [id: string]: Address;
     }>;
     getAccountAddressByCurrency(account: Identity<Account>, currency: Identity<Currency>): Promise<Address[]>;
