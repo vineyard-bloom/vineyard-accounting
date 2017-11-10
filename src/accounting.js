@@ -56,9 +56,19 @@ class AccountManager {
     ON accounts_addresses.account = :account
     AND accounts_addresses.address = addresses.id
     `;
-            return yield this.model.ground.querySingle(sql, {
+            return yield this.model.ground.query(sql, {
                 account: account,
             });
+        });
+    }
+    getAccountAddressesMap(account) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const addresses = yield this.getAccountAddresses(account);
+            const result = {};
+            for (let address of addresses) {
+                result[address.currency] = address;
+            }
+            return result;
         });
     }
     getAccountAddressByCurrency(account, currency) {
@@ -93,17 +103,17 @@ class AccountManager {
             });
         });
     }
+    get async() { }
     getAccountByAddressId(address) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const sql = `
+        const sql = `
     SELECT accounts.* FROM accounts
     JOIN accounts_addresses 
     ON accounts_addresses.account = accounts.id
     AND accounts_addresses.address = :address
     `;
-            return yield this.model.ground.querySingle(sql, {
-                address: address
-            });
+        return await;
+        this.model.ground.querySingle(sql, {
+            address: address
         });
     }
     assignUnusedAddress(account, currency) {

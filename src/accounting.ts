@@ -49,7 +49,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     return address
   }
 
-  async getAccountAddresses(account: Identity<Account>):Promise<Address[]> {
+  async getAccountAddresses(account: Identity<Account>): Promise<Address[]> {
     const sql = `
     SELECT addresses.*
     JOIN accounts_addresses 
@@ -57,12 +57,21 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     AND accounts_addresses.address = addresses.id
     `
 
-    return await this.model.ground.querySingle(sql, {
+    return await this.model.ground.query(sql, {
       account: account,
     })
   }
 
-  async getAccountAddressByCurrency(account: Identity<Account>, currency: Identity<Currency>):Promise<Address[]> {
+  async getAccountAddressesMap(account: Identity<Account>): Promise<{ [id: string]: Address }> {
+    const addresses = await this.getAccountAddresses(account)
+    const result: { [id: string]: Address } = {}
+    for (let address of addresses) {
+      result[address.currency] = address
+    }
+    return result
+  }
+
+  async getAccountAddressByCurrency(account: Identity<Account>, currency: Identity<Currency>): Promise<Address[]> {
     const sql = `
     SELECT addresses.*
     JOIN accounts_addresses 
@@ -93,14 +102,17 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     })
   }
 
-  async getAccountByAddressId(address: Identity<Address>): Promise<Account | undefined> {
+  async get async
+
+  getAccountByAddressId(address: Identity<Address>): Promise<Account | undefined> {
     const sql = `
     SELECT accounts.* FROM accounts
     JOIN accounts_addresses 
     ON accounts_addresses.account = accounts.id
     AND accounts_addresses.address = :address
     `
-    return await this.model.ground.querySingle(sql, {
+    return await
+    this.model.ground.querySingle(sql, {
       address: address
     })
   }
