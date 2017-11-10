@@ -1,15 +1,16 @@
 {
-  "Address": {
+  "Accounts_Addresses": {
+    "table": {
+      "name": "accounts_addresses"
+    },
+    "primaryKeys": ["account", "address"],
     "properties": {
-      "address": {
-        "type": "string"
-      },
-      "currency": {
-        "type": "string"
-      },
       "account": {
-        "type": "Account",
-        "nullable": true
+        "type": "Account"
+      },
+      "address": {
+        "type": "Address",
+        "unique": true
       }
     }
   },

@@ -3,7 +3,10 @@ import {
   NewGenericLedger
 } from "./types";
 import {LedgerManager} from "./ledger"
-import {Address, NewAddress, ExternalTransaction, BaseTransaction, Transaction} from "vineyard-blockchain"
+import {
+  Address, NewAddress, ExternalSingleTransaction as ExternalTransaction, BaseTransaction,
+  SingleTransaction as Transaction, NewSingleTransaction
+} from "vineyard-blockchain"
 
 export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType> {
   model: AccountingModel<Account, Deposit, LedgerType>
@@ -32,13 +35,31 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     return this.model.Address.create(address)
   }
 
-  async getAccountByTransaction(transaction: BaseTransaction, currency: string): Promise<Account | undefined> {
-    if (currency = "bitcoin") {
-      return await this.model.Account.first({btcDepositAddress: transaction.to})
-    }
-    if (currency = "ethereum") {
-      return await this.model.Account.first({ethDepositAddress: transaction.to})
-    }
+  async getAccountByAddressString(externalAddress: string, currency: string): Promise<Account | undefined> {
+    const sql = `
+    SELECT accounts.* FROM accounts
+    JOIN accounts_addresses 
+    ON accounts_addresses.account = accounts.id
+    JOIN addresses ON accounts_addresses.address = address.id
+    AND addresses.address = :address
+    AND addresses.currency = :currency
+    `
+    return await this.model.ground.querySingle(sql, {
+      address: externalAddress,
+      currency: currency
+    })
+  }
+
+  async getAccountByAddressId(address: string): Promise<Account | undefined> {
+    const sql = `
+    SELECT accounts.* FROM accounts
+    JOIN accounts_addresses 
+    ON accounts_addresses.account = accounts.id
+    AND accounts_addresses.address = :address
+    `
+    return await this.model.ground.querySingle(sql, {
+      address: address
+    })
   }
 
   async assignUnusedAddress(account: string, currency: string): Promise<Address | undefined> {

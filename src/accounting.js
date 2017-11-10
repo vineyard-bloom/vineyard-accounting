@@ -35,14 +35,33 @@ class AccountManager {
             return this.model.Address.create(address);
         });
     }
-    getAccountByTransaction(transaction, currency) {
+    getAccountByAddressString(externalAddress, currency) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (currency = "bitcoin") {
-                return yield this.model.Account.first({ btcDepositAddress: transaction.to });
-            }
-            if (currency = "ethereum") {
-                return yield this.model.Account.first({ ethDepositAddress: transaction.to });
-            }
+            const sql = `
+    SELECT accounts.* FROM accounts
+    JOIN accounts_addresses 
+    ON accounts_addresses.account = accounts.id
+    JOIN addresses ON accounts_addresses.address = address.id
+    AND addresses.address = :address
+    AND addresses.currency = :currency
+    `;
+            return yield this.model.ground.querySingle(sql, {
+                address: externalAddress,
+                currency: currency
+            });
+        });
+    }
+    getAccountByAddressId(address) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sql = `
+    SELECT accounts.* FROM accounts
+    JOIN accounts_addresses 
+    ON accounts_addresses.account = accounts.id
+    AND accounts_addresses.address = :address
+    `;
+            return yield this.model.ground.querySingle(sql, {
+                address: address
+            });
         });
     }
     assignUnusedAddress(account, currency) {

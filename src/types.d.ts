@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { Collection, Modeler } from 'vineyard-ground';
-import { Address, Currency, NewAddress, Transaction } from "vineyard-blockchain";
+import { Address, Currency, NewAddress, SingleTransaction as Transaction } from "vineyard-blockchain";
 export declare type Id = string;
 export declare type Identity<T> = Id;
 export interface HasId {
