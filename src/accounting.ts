@@ -13,7 +13,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
   accountConfig: AccountConfig
   ledgerManager: LedgerManager<Account, Deposit, LedgerType>
 
-  constructor(model: AccountingModel<Account, Deposit, LedgerType>, accountConfig: AccountConfig) {
+  constructor(model: AccountingModel<Account, Deposit, LedgerType>, accountConfig: AccountConfig = {balanceField: 'balance'}) {
     this.model = model
     this.accountConfig = accountConfig
     this.ledgerManager = new LedgerManager<Account, Deposit, LedgerType>(model, this.accountConfig)
@@ -118,14 +118,16 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
 
   async assignUnusedAddress(account: string, currency: Identity<Currency>): Promise<Address | undefined> {
     const sql = `
-    INSERT INTO accounts_addresses (account, address
-    FROM (SELECT 
+    INSERT INTO accounts_addresses (account, address, created, modified)
+      (SELECT :account, addresses.id, NOW(), NOW()
       FROM addresses
       LEFT JOIN accounts_addresses
       ON accounts_addresses.address = addresses.id
       WHERE accounts_addresses.address IS NULL
+      AND addresses.currency = :currency
       LIMIT 1
     )
+    RETURNING *
   `
     return await this.model.ground.querySingle(sql, {
       account: account,

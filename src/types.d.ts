@@ -46,5 +46,4 @@ export interface DepositField {
 }
 export interface AccountConfig {
     balanceField: string;
-    depositAddresses: DepositField[];
 }

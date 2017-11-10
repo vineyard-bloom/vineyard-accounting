@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const ledger_1 = require("./ledger");
 class AccountManager {
-    constructor(model, accountConfig) {
+    constructor(model, accountConfig = { balanceField: 'balance' }) {
         this.model = model;
         this.accountConfig = accountConfig;
         this.ledgerManager = new ledger_1.LedgerManager(model, this.accountConfig);
@@ -121,14 +121,16 @@ class AccountManager {
     assignUnusedAddress(account, currency) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `
-    INSERT INTO accounts_addresses (account, address
-    FROM (SELECT 
+    INSERT INTO accounts_addresses (account, address, created, modified)
+      (SELECT :account, addresses.id, NOW(), NOW()
       FROM addresses
       LEFT JOIN accounts_addresses
       ON accounts_addresses.address = addresses.id
       WHERE accounts_addresses.address IS NULL
+      AND addresses.currency = :currency
       LIMIT 1
     )
+    RETURNING *
   `;
             return yield this.model.ground.querySingle(sql, {
                 account: account,

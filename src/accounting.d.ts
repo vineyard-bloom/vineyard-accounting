@@ -5,7 +5,7 @@ export declare class AccountManager<Account, Deposit extends GenericDeposit, Led
     model: AccountingModel<Account, Deposit, LedgerType>;
     accountConfig: AccountConfig;
     ledgerManager: LedgerManager<Account, Deposit, LedgerType>;
-    constructor(model: AccountingModel<Account, Deposit, LedgerType>, accountConfig: AccountConfig);
+    constructor(model: AccountingModel<Account, Deposit, LedgerType>, accountConfig?: AccountConfig);
     createDeposit<NewDeposit>(newDeposit: NewDeposit): Promise<Deposit>;
     createDepositFromTransaction<NewDeposit>(transaction: Transaction): Promise<Deposit>;
     createLedger(newLedger: NewGenericLedger<Account, LedgerType>): Promise<GenericLedger<Account, LedgerType>>;
