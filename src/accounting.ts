@@ -120,11 +120,12 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     const sql = `
     INSERT INTO accounts_addresses (account, address
     FROM (SELECT 
-    FROM addresses
-    LEFT JOIN accounts_addresses
-    ON accounts_addresses.address = addresses.id
-    WHERE accounts_addresses.address IS NULL
-    LIMIT 1
+      FROM addresses
+      LEFT JOIN accounts_addresses
+      ON accounts_addresses.address = addresses.id
+      WHERE accounts_addresses.address IS NULL
+      LIMIT 1
+    )
   `
     return await this.model.ground.querySingle(sql, {
       account: account,
