@@ -35,7 +35,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     return this.model.Address.create(address)
   }
 
-  async createAccountAddress(account: Identity<Account>, externalAddress: string, currency: string): Promise<Address> {
+  async createAccountAddress(account: Identity<Account>, externalAddress: string, currency: number): Promise<Address> {
     const address = await this.model.Address.create({
       address: externalAddress,
       currency: currency,
@@ -72,7 +72,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     return result
   }
 
-  async getAccountAddressByCurrency(account: Identity<Account>, currency: Identity<Currency>): Promise<Address[]> {
+  async getAccountAddressByCurrency(account: Identity<Account>, currency: number): Promise<Address[]> {
     const sql = `
     SELECT addresses.*
     FROM addresses
@@ -89,7 +89,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     })
   }
 
-  async getAccountByAddressString(externalAddress: string, currency: Identity<Currency>): Promise<Account | undefined> {
+  async getAccountByAddressString(externalAddress: string, currency: number): Promise<Account | undefined> {
     const sql = `
     SELECT accounts.* FROM accounts
     JOIN accounts_addresses 
@@ -116,7 +116,7 @@ export class AccountManager<Account, Deposit extends GenericDeposit, LedgerType>
     })
   }
 
-  async assignUnusedAddress(account: string, currency: Identity<Currency>): Promise<Address | undefined> {
+  async assignUnusedAddress(account: string, currency: number): Promise<Address | undefined> {
     const sql = `
     INSERT INTO accounts_addresses (account, address, created, modified)
       (SELECT :account, addresses.id, NOW(), NOW()
