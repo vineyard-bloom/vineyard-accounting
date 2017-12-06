@@ -19,6 +19,7 @@ export type NewAccountAddress = NewAddress & AddressWithAccount
 export type AccountAddress = Address & AddressWithAccount
 
 export interface NewGenericLedger<Account, LedgerType> {
+  id?: Id
   account: Identity<Account>,
   mod: BigNumber
   description: string,
